@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0b4f5b">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>مكتبة محاضرات تقنيات المختبرات الطبية — المرحلة الأولى</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<style>
+:root{--bg:#f4f7f9;--card:#fff;--ink:#16303d;--mute:#5d7280;--brand:#0f6b7a;--brand2:#0b4f5b;--line:#dbe4e9;--ok:#1b7f4b;--err:#b3261e;--soft:#e4f1f3}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1a20;--card:#17262e;--ink:#e6f0f4;--mute:#93a9b5;--brand:#4fb3c3;--brand2:#7cc9d6;--line:#2a3d48;--soft:#1d3640}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Tajawal,Tahoma,Arial,sans-serif;line-height:1.6;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);transition:background .3s}
+body.hasnav{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+header{background:var(--brand2);color:#fff;padding:14px 16px}
+header .in,main{max-width:960px;margin:auto}
+header .in{display:flex;align-items:center;justify-content:space-between;gap:10px}
+header h1{margin:0;font-size:1.1rem}
+header p{margin:2px 0 0;opacity:.85;font-size:.85rem}
+.hic{display:flex;gap:8px}
+.hic a{position:relative;color:#fff;text-decoration:none;font-size:1.25rem;padding:2px 9px;border-radius:10px;background:#ffffff26}
+.badge{position:absolute;top:-6px;inset-inline-start:-6px;background:var(--err);color:#fff;border-radius:10px;font-size:.7rem;padding:0 6px;min-width:18px;text-align:center;line-height:18px}
+main{padding:16px}
+a{color:var(--brand)}
+h2{margin:6px 0 12px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+input,select,textarea,button{font:inherit;color:inherit}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+.bar input{flex:1 1 200px}
+label{display:block;margin:12px 0 4px;font-weight:500}
+.btn{border:0;border-radius:10px;padding:10px 16px;background:var(--brand);color:#fff;cursor:pointer;font-weight:500;text-decoration:none;display:inline-block}
+.btn.sec{background:var(--soft);color:var(--brand2)}
+.btn.del{background:var(--err)}
+.btn:disabled{opacity:.5}
+.btn.sm{padding:6px 12px;font-size:.9rem}
+
+/* إصلاح وضوح نصوص خيارات الاختبار على الخلفيات الفاتحة والداكنة */
+.opt{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  width:100%;
+  margin:8px 0;
+  padding:12px 14px;
+  border:1px solid #b8c8d0;
+  border-radius:10px;
+  background:#f7fafb;
+  color:#172b34 !important;
+  text-align:right;
+  white-space:normal;
+  line-height:1.6;
+  font-weight:500;
+  cursor:pointer;
+}
+.opt span{flex:1;min-width:0;color:#172b34 !important;overflow-wrap:anywhere}
+.opt b{flex:0 0 auto;color:inherit !important}
+.opt:disabled{opacity:1;cursor:default}
+.opt.ok{background:#e6f6eb;border-color:#25824d;color:#14532d !important}
+.opt.ok span,.opt.ok b{color:#14532d !important}
+.opt.bad{background:#fff0ef;border-color:#c43e37;color:#8b1e1e !important}
+.opt.bad span,.opt.bad b{color:#8b1e1e !important}
+.opt.dim{background:#edf1f3;border-color:#c9d2d7;color:#596a72 !important}
+.opt.dim span,.opt.dim b{color:#596a72 !important}
+
+.chipb{border:1px solid var(--line);background:var(--card);border-radius:18px;padding:4px 11px;font-size:.85rem;cursor:pointer;text-decoration:none;color:var(--ink);white-space:nowrap}
+.chipb.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+.sub{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;text-decoration:none;color:var(--ink);display:block}
+.sub:hover{border-color:var(--brand)}
+.sub .ic{font-size:1.8rem}
+.sub b{display:block;margin-top:4px}
+.sub small{color:var(--mute);direction:ltr;display:block;text-align:right}
+.sub .n{color:var(--brand);font-size:.85rem;margin:6px 0 4px}
+.lec{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+.lec.done{border-color:var(--ok)}
+.lec h3{margin:0 0 2px;font-size:1.05rem}
+.lec .m{color:var(--mute);font-size:.85rem}
+.lec p{margin:6px 0 0;color:var(--mute)}
+.acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.empty{text-align:center;color:var(--mute);padding:28px 12px;background:var(--card);border:1px dashed var(--line);border-radius:12px;margin-bottom:12px}
+.crumb{margin:0 0 12px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+.panel h2,.panel h3{margin-top:0}
+.hint{font-size:.85rem;color:var(--mute)}
+.pbar{height:10px;background:var(--soft);border-radius:8px;overflow:hidden}
+.pbar>i{display:block;height:100%;background:var(--brand);border-radius:8px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.stat{background:var(--soft);border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-size:1.4rem;color:var(--brand2)}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tab{flex:1;padding:10px;border:1px solid var(--line);background:var(--card);border-radius:10px;cursor:pointer}
+.tab.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.ann{display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--soft);border:1px solid var(--brand);color:var(--brand2);border-radius:12px;padding:10px 14px;margin-bottom:12px}
+.ann span{flex:1}
+.new{background:var(--ok);color:#fff;border-radius:8px;padding:0 8px;font-size:.75rem;margin-inline-start:6px;font-weight:500}
+.unread{border-color:var(--brand);background:var(--soft)}
+.today{border-color:var(--brand)}
+.row{padding:7px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.code{font-family:monospace;direction:ltr;text-align:left;word-break:break-all;background:var(--soft);padding:12px;border-radius:10px;margin:10px 0;font-size:.95rem}
+#toast{position:fixed;inset-inline:12px;bottom:calc(84px + env(safe-area-inset-bottom));max-width:480px;margin:auto;padding:12px 16px;border-radius:10px;color:#fff;display:none;z-index:60}
+#toast.ok{background:var(--ok)}#toast.err{background:var(--err)}
+#nav{position:fixed;bottom:0;inset-inline:0;background:var(--card);border-top:1px solid var(--line);display:none;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom));padding-right:84px;z-index:30}
+#nav a{flex:1;text-align:center;text-decoration:none;color:var(--mute);font-size:.72rem;line-height:1.25}
+#nav a b{display:block;font-size:1.25rem;font-weight:400}
+#nav a.on{color:var(--brand);font-weight:700}
+#reader{position:fixed;inset:0;background:var(--bg);z-index:70;display:none;flex-direction:column}
+#reader .top{display:flex;gap:8px;align-items:center;padding:10px;background:var(--brand2);color:#fff;padding-top:calc(10px + env(safe-area-inset-top))}
+#reader .top span{flex:1;min-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#sharemodal{position:fixed;inset:0;z-index:100;background:#0009;display:none;align-items:center;justify-content:center;padding:18px}
+#sharemodal .sharebox{width:min(100%,420px);background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 12px 40px #0004}
+#sharemodal h3{margin:0 0 6px}
+#sharemodal p{margin:0 0 14px;color:var(--mute);font-size:.9rem}
+#sharemodal .shareopts{display:grid;gap:9px}
+#sharemodal .shareopts .btn{width:100%;text-align:center}
+#sharemodal .sharecancel{margin-top:10px;width:100%}
+#pages{flex:1;overflow:auto;padding:10px;background:#8a98a0;text-align:center}
+#pages .pg{background:#fff;margin:0 auto 10px;max-width:100%;box-shadow:0 1px 4px #0004}
+#pages canvas{width:100%;height:auto;display:block}
+.custombg main>h2,.custombg .crumb,.custombg .crumb a,.custombg footer,.custombg footer a,.custombg main>.hint,.custombg main>h3{color:#fff;text-shadow:0 1px 3px #000b}
+footer{text-align:center;color:var(--mute);font-size:.8rem;padding:20px}
+</style>
+</head>
+<body>
+<header>
+  <div class="in">
+    <div>
+      <h1><a href="#/" style="color:#fff;text-decoration:none">📚 مكتبة محاضرات تقنيات المختبرات الطبية</a></h1>
+      <p>المرحلة الأولى</p>
+    </div>
+    <div class="hic" id="hic"></div>
+  </div>
+</header>
+
+<main id="app">
+  <div class="empty">جارٍ التحميل…</div>
+</main>
+
+<footer>
+  <div style="margin-bottom:8px">
+    Create By:
+    <a href="https://www.instagram.com/jotaro_19?rpxt=cTk1ZDU0dW1xNGQ1"
+       target="_blank"
+       rel="noopener noreferrer"
+       style="font-weight:700;text-decoration:none">
+      رافع
+      <svg aria-label="Instagram" title="Instagram" viewBox="0 0 24 24" width="16" height="16"
+           style="vertical-align:-3px;margin-inline-start:3px;fill:none;stroke:currentColor;stroke-width:2">
+        <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+        <circle cx="12" cy="12" r="4"></circle>
+        <circle cx="17.5" cy="6.5" r="1" style="fill:currentColor;stroke:none"></circle>
+      </svg>
+    </a>
+  </div>
+
+  <div style="margin-bottom:10px">
+    <a href="https://www.instagram.com/jotaro_19?rpxt=cTk1ZDU0dW1xNGQ1"
+       target="_blank"
+       rel="noopener noreferrer">للإبلاغ عن مشكلة او الاستفسار</a>
+  </div>
+
+  <a href="#/admin">دخول المالك</a>
+</footer>
+
+<div id="toast"></div>
+<nav id="nav"></nav>
+
+<div id="reader">
+  <div class="top">
+    <button class="btn sec sm" data-act="rclose">إغلاق ✕</button>
+    <span id="rtitle"></span>
+    <button class="btn sec sm" data-act="sharecurrent">مشاركة</button>
+    <button class="btn sec sm" data-act="rdone" id="rdone" style="display:none">✓ مكتملة</button>
+    <a class="btn sec sm" id="rdl">تنزيل</a>
+  </div>
+  <div id="pages"></div>
+</div>
+
+<div id="sharemodal" role="dialog" aria-modal="true" aria-labelledby="sharetitle">
+  <div class="sharebox">
+    <h3 id="sharetitle">مشاركة المحاضرة</h3>
+    <p>اختر طريقة المشاركة خارج التطبيق.</p>
+    <div class="shareopts">
+      <button class="btn" data-act="sharelink">🔗 مشاركة رابط المحاضرة</button>
+      <button class="btn sec" data-act="sharepdf">📄 مشاركة ملف PDF نفسه</button>
+    </div>
+    <button class="btn sec sharecancel" data-act="shareclose">إلغاء</button>
+  </div>
+</div>
+
+<!-- ملفات التطبيق -->
+<script src="app-core.js?v=stage1-2"></script>
+<script src="app-views.js?v=stage1-2"></script>
+<script src="app-admin.js?v=stage1-2"></script>
+<script src="app-quiz.js?v=stage1-2"></script>
+<script src="app-main.js?v=stage1-2"></script>
+
+<!-- ملف سجل الدرجات -->
+<script src="app-grades.js?v=2"></script>
+
+<!-- أداة Gabster -->
+<script data-gabster-widget
+        src="https://widget.gabster.ai/loader?cbid=6acfe0f5449b0dc12d44a813"
+        data-embed-type="widget"></script>
+</body>
+</html>
